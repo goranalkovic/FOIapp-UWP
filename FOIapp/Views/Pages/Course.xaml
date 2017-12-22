@@ -1,0 +1,218 @@
+﻿<Page
+    x:Class="FOIapp.Views.Pages.Course"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FOIapp.Views.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:UWPT="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d" Margin="0,-60,0,0 ">
+
+    <Grid Background="#f6f6f6" Padding="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="ActiveCourseName" Style="{StaticResource SubheaderTextBlockStyle}" Grid.ColumnSpan="2">Mreže računala 1</TextBlock>
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}">Ukupno bodova</TextBlock>
+            <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                <TextBlock
+                    FontSize="44" CharacterSpacing="-10" FontWeight="SemiBold"
+                    VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline"
+                    >51</TextBlock>
+                <TextBlock VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline"
+                           FontSize="18" Foreground="#606060"
+                           Padding="0,0,0,2" 
+                           >/100</TextBlock>
+            </StackPanel>
+            <TextBlock Margin="2,8,0,0"
+                       FontSize="13" Foreground="{StaticResource SystemControlHighlightAltListAccentMediumBrush}">Dovoljan (2)</TextBlock>
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                       Margin="0,24,0,4">Izostanci</TextBlock>
+            
+            <TextBlock x:Name="DontHaveToComeLabel" Visibility="Collapsed" Margin="0,4,0,0">Nema uvjeta za dolaske :)</TextBlock>
+            <StackPanel Orientation=" Vertical">
+                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
+                                  OffsetX="0" OffsetY="2" Margin="0,10">
+                    <Grid Background="#fff" Height="64" Padding="12,0,12,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="22"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
+                               VerticalAlignment="Center" 
+                               TextLineBounds="Tight"
+                               >Predavanja</TextBlock>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="CurrentAbsences" FontSize="20" FontWeight="SemiBold"
+                                   TextLineBounds="Tight">0</TextBlock>
+                            <TextBlock x:Name="MaxAbsences" FontSize="11" Foreground="#707070"
+                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                   Padding="0,0,0,1">/3</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <Button Height="22" Width="24"
+                                Padding="0" Margin="0"
+                                Background="Transparent" BorderThickness="1"
+                                Style="{StaticResource ButtonRevealStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
+                                      Margin="0" FontSize="15" 
+                                      Foreground="#606060"/>
+                            </Button>
+                            <Button Height="22" Width="24"
+                                Padding="0" Margin="0,1,0,0"
+                                Background="Transparent" BorderThickness="1"
+                                Style="{StaticResource ButtonRevealStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
+                                      Margin="0" FontSize="15" 
+                                      Foreground="#606060"/>
+                            </Button>
+                        </StackPanel>
+
+                    </Grid>
+                </UWPT:DropShadowPanel>
+                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
+                                  OffsetX="0" OffsetY="2" Margin="0,10">
+                    <Grid Background="#fff" Height="64" Padding="12,0,12,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="22"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
+                               VerticalAlignment="Center" 
+                               TextLineBounds="Tight"
+                               >Seminari</TextBlock>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="CurrentAbsences2" FontSize="20" FontWeight="SemiBold"
+                                   TextLineBounds="Tight">0</TextBlock>
+                            <TextBlock x:Name="MaxAbsences2" FontSize="11" Foreground="#707070"
+                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                   Padding="0,0,0,1">/3</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <Button Height="22" Width="24"
+                                Padding="0" Margin="0"
+                                Background="Transparent" BorderThickness="1"
+                                Style="{StaticResource ButtonRevealStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
+                                      Margin="0" FontSize="15" 
+                                      Foreground="#606060"/>
+                            </Button>
+                            <Button Height="22" Width="24"
+                                Padding="0" Margin="0,1,0,0"
+                                Background="Transparent" BorderThickness="1"
+                                Style="{StaticResource ButtonRevealStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
+                                      Margin="0" FontSize="15" 
+                                      Foreground="#606060"/>
+                            </Button>
+                        </StackPanel>
+
+                    </Grid>
+                </UWPT:DropShadowPanel>
+                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
+                                  OffsetX="0" OffsetY="2" Margin="0,10">
+                    <Grid Background="#fff" Height="64" Padding="12,0,12,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="22"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
+                               VerticalAlignment="Center" 
+                               TextLineBounds="Tight"
+                               >Lab. vježbe</TextBlock>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="CurrentAbsences1" FontSize="20" FontWeight="SemiBold"
+                                   TextLineBounds="Tight">0</TextBlock>
+                            <TextBlock x:Name="MaxAbsences1" FontSize="11" Foreground="#707070"
+                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                   Padding="0,0,0,1">/3</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <Button Height="22" Width="24"
+                                Padding="0" Margin="0"
+                                Background="Transparent" BorderThickness="1"
+                                Style="{StaticResource ButtonRevealStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
+                                      Margin="0" FontSize="15" 
+                                      Foreground="#606060"/>
+                            </Button>
+                            <Button Height="22" Width="24"
+                                Padding="0" Margin="0,1,0,0"
+                                Background="Transparent" BorderThickness="1"
+                                Style="{StaticResource ButtonRevealStyle}">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
+                                      Margin="0" FontSize="15" 
+                                      Foreground="#606060"/>
+                            </Button>
+                        </StackPanel>
+
+                    </Grid>
+                </UWPT:DropShadowPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="11,0,0,0" >Bodovi</TextBlock>
+
+            <Grid Grid.Row="1">
+            <ListView x:Name="CourseCategoryPoints" SelectionMode="Single" CanDragItems="True" CanDrag="True" CanReorderItems="True" IsItemClickEnabled="False" HorizontalAlignment="Left" ShowsScrollingPlaceholders="True">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UWPT:WrapPanel Background="Transparent" 
+                                        Orientation="Horizontal"
+                                        />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                    <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black" OffsetX="0" OffsetY="2" Margin="0,10" Padding="0">
+                            <StackPanel Background="#fff" Width="250" Padding="12,14" Orientation="Vertical">
+                                <TextBlock Style="{StaticResource BaseTextBlockStyle}" TextLineBounds="Tight"
+                                       Margin="0,0,0,8" FontSize="16" Text="{Binding CategoryName}"/>
+
+                                <ListView SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding ChildItems}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <RelativePanel Padding="0,4" Width="203">
+                                                <TextBlock RelativePanel.AlignVerticalCenterWithPanel="True"
+                                                       TextLineBounds="Tight" Text="{Binding Name}"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                        RelativePanel.AlignRightWithPanel="True"
+                                                        RelativePanel.AlignVerticalCenterWithPanel="True">
+                                                    <TextBlock FontSize="20" FontWeight="SemiBold"
+                                                           TextLineBounds="Tight" Text="0"/>
+                                                    <TextBlock FontSize="11" Foreground="#707070"
+                                                           TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                                           Padding="0,0,0,1" Text="/3"/>
+                                                </StackPanel>
+                                            </RelativePanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                    <ListViewItem>Abc</ListViewItem>
+                                </ListView>
+
+                            </StackPanel>
+                        </UWPT:DropShadowPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            </Grid>
+
+
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,44 @@
+﻿<Page
+    x:Class="FOIapp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FOIapp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:W10Insider="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 6)"
+    mc:Ignorable="d" RequestedTheme="Light">
+    
+    <Grid>
+        <NavigationView x:Name="MainNavView" Background="#f6f6f6"
+                        AlwaysShowHeader="True" OpenPaneLength="280"
+                        CompactModeThresholdWidth="10"
+                        SelectionChanged="NavSelectionChanged"
+                        W10Insider:IsBackButtonVisible="Collapsed"
+                        >
+            
+
+            <NavigationView.PaneFooter>
+                <StackPanel Orientation="Horizontal" Margin="16,8">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" Margin="0,0,8,0" VerticalAlignment="Center" FontSize="15" >
+                        <ToolTipService.ToolTip>
+                            <ToolTip x:Name="NavMenuUserIconTooltip"/>
+                        </ToolTipService.ToolTip>
+                    </FontIcon>
+                    <StackPanel Orientation="Vertical" Margin="10,0,0,0" ToolTipService.ToolTip="Promijenite korisnika u Postavkama">
+                        <TextBlock x:Name="CurrentUserName"/>
+                        <TextBlock x:Name="CurrentUserEmail" FontSize="13" Foreground="Gray"/>
+                    </StackPanel>
+                    <ProgressRing x:Name="UserLoadingRing" IsActive="False" />
+                </StackPanel>
+            </NavigationView.PaneFooter>
+            <Frame x:Name="ContentFrame">
+                <Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition/>
+                    </TransitionCollection>
+                </Frame.ContentTransitions>
+            </Frame>
+        </NavigationView>
+        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="FOIapp" IsHitTestVisible="False" Margin="12,8"/>
+    </Grid>
+</Page>
