@@ -14,6 +14,7 @@ namespace Helpers
 {
     static class FunctionsAndInterfaces
     {
+        public static string connectionString = "Data Source=.;Initial Catalog=bp2-db;Integrated Security=True";
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
         {
             Random random = new Random();
@@ -37,10 +38,10 @@ namespace Helpers
                 return (T)parent;
             }
             T result = null;
-            int count = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < count; i++)
+            var count = VisualTreeHelper.GetChildrenCount(parent);
+            for (var i = 0; i < count; i++)
             {
-                UIElement child = (UIElement)VisualTreeHelper.GetChild(parent, i);
+                var child = (UIElement)VisualTreeHelper.GetChild(parent, i);
 
                 if (FindControl<T>(child, targetType, ControlName) != null)
                 {

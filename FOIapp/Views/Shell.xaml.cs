@@ -61,7 +61,7 @@ namespace FOIapp
                 
 
                 //using (var connection = Helpers.Databases.GetSqlConnection("galkovic-bp2.database.windows.net", "Goc", "sony-yield-pencil1", "bp2-projekt"))
-                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=bp2-db;Integrated Security=True"))
+                using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
                 {
                     connection.Open();
                     var query = $"SELECT Name, Surname, Email FROM Users WHERE UserID = {userId};";
@@ -172,7 +172,9 @@ namespace FOIapp
                         ContentFrame.Navigate(typeof(AllCourses));
                         //MainNavView.Header = "Moji kolegiji";
                         break;
-
+                    case "UserTile":
+                        ContentFrame.Navigate(typeof(Settings));
+                        break;
                     case "professors":
                         ContentFrame.Navigate(typeof(Professors));
                         //MainNavView.Header = "Popis profesora";

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FOIapp.Classes
 {
-    class CourseCategory
+    public class CourseCategory
     {
         public int CategoryID { get; set; }
 

@@ -15,10 +15,10 @@
                         SelectionChanged="NavSelectionChanged"
                         W10Insider:IsBackButtonVisible="Collapsed"
                         >
-            
+
 
             <NavigationView.PaneFooter>
-                <StackPanel Orientation="Horizontal" Margin="16,8">
+                <StackPanel Orientation="Horizontal" Padding="16,8">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" Margin="0,0,8,0" VerticalAlignment="Center" FontSize="15" >
                         <ToolTipService.ToolTip>
                             <ToolTip x:Name="NavMenuUserIconTooltip"/>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FOIapp.Classes
 {
-    class UserSettings
+    public class UserSettings
     {
         public int UserID { get; set; }
 

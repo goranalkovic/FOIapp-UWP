@@ -54,7 +54,7 @@ namespace FOIapp.Views.Pages
                 bool cuNotifications;
 
                 //using (var connection = Helpers.Databases.GetSqlConnection("galkovic-bp2.database.windows.net", "Goc", "sony-yield-pencil1", "bp2-projekt"))
-                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=bp2-db;Integrated Security=True"))
+                using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
                 {
                     connection.Open();
                     var query = $"SELECT Name, Surname, Email, ShowNotifications FROM Users INNER JOIN UserSettings ON Users.UserID = UserSettings.UserID WHERE Users.UserID = {currentUserId};";
@@ -95,7 +95,7 @@ namespace FOIapp.Views.Pages
 
                 
                 //using (var connection = Helpers.Databases.GetSqlConnection("galkovic-bp2.database.windows.net", "Goc", "sony-yield-pencil1", "bp2-projekt"))
-                using (var connection = new SqlConnection("Data Source=.;Initial Catalog=bp2-db;Integrated Security=True"))
+                using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
                 {
                     connection.Open();
                     var query = $"SELECT UserID, Name, Surname, Email FROM Users WHERE UserID != {currentUserId};";
@@ -136,7 +136,7 @@ namespace FOIapp.Views.Pages
 
 
                 //using (var connection = Helpers.Databases.GetSqlConnection("galkovic-bp2.database.windows.net", "Goc", "sony-yield-pencil1", "bp2-projekt"))
-            using (var connection = new SqlConnection("Data Source=.;Initial Catalog=bp2-db;Integrated Security=True"))
+            using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
             {
                 connection.Open();
                 var query =

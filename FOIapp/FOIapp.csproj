@@ -100,7 +100,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\User.cs" />
+    <Compile Include="Classes\UserAbsences.cs" />
     <Compile Include="Classes\UserSettings.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="SharedFunctions.cs" />
     <Compile Include="Views\Pages\AllCourses.xaml.cs">
       <DependentUpon>AllCourses.xaml</DependentUpon>

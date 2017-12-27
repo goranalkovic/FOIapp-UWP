@@ -6,210 +6,189 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:UWPT="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls="using:WinRTXamlToolkit.Controls"
     mc:Ignorable="d" Margin="0,-60,0,0 ">
 
     <Grid Background="#f6f6f6" Padding="24">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="260"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
+            <RowDefinition Height="120"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="ActiveCourseName" Style="{StaticResource SubheaderTextBlockStyle}" Grid.ColumnSpan="2">Mreže računala 1</TextBlock>
-        <StackPanel Grid.Row="1" Orientation="Vertical">
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}">Ukupno bodova</TextBlock>
+        
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="230">
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Ukupno bodova"/>
             <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
                 <TextBlock
                     FontSize="44" CharacterSpacing="-10" FontWeight="SemiBold"
                     VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline"
-                    >51</TextBlock>
+                >51</TextBlock>
                 <TextBlock VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline"
                            FontSize="18" Foreground="#606060"
                            Padding="0,0,0,2" 
-                           >/100</TextBlock>
+                >/100</TextBlock>
             </StackPanel>
             <TextBlock Margin="2,8,0,0"
                        FontSize="13" Foreground="{StaticResource SystemControlHighlightAltListAccentMediumBrush}">Dovoljan (2)</TextBlock>
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
-                       Margin="0,24,0,4">Izostanci</TextBlock>
-            
-            <TextBlock x:Name="DontHaveToComeLabel" Visibility="Collapsed" Margin="0,4,0,0">Nema uvjeta za dolaske :)</TextBlock>
-            <StackPanel Orientation=" Vertical">
-                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
-                                  OffsetX="0" OffsetY="2" Margin="0,10">
-                    <Grid Background="#fff" Height="64" Padding="12,0,12,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="22"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
-                               VerticalAlignment="Center" 
-                               TextLineBounds="Tight"
-                               >Predavanja</TextBlock>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="CurrentAbsences" FontSize="20" FontWeight="SemiBold"
-                                   TextLineBounds="Tight">0</TextBlock>
-                            <TextBlock x:Name="MaxAbsences" FontSize="11" Foreground="#707070"
-                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
-                                   Padding="0,0,0,1">/3</TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <Button Height="22" Width="24"
-                                Padding="0" Margin="0"
-                                Background="Transparent" BorderThickness="1"
-                                Style="{StaticResource ButtonRevealStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
-                                      Margin="0" FontSize="15" 
-                                      Foreground="#606060"/>
-                            </Button>
-                            <Button Height="22" Width="24"
-                                Padding="0" Margin="0,1,0,0"
-                                Background="Transparent" BorderThickness="1"
-                                Style="{StaticResource ButtonRevealStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
-                                      Margin="0" FontSize="15" 
-                                      Foreground="#606060"/>
-                            </Button>
-                        </StackPanel>
-
-                    </Grid>
-                </UWPT:DropShadowPanel>
-                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
-                                  OffsetX="0" OffsetY="2" Margin="0,10">
-                    <Grid Background="#fff" Height="64" Padding="12,0,12,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="22"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
-                               VerticalAlignment="Center" 
-                               TextLineBounds="Tight"
-                               >Seminari</TextBlock>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="CurrentAbsences2" FontSize="20" FontWeight="SemiBold"
-                                   TextLineBounds="Tight">0</TextBlock>
-                            <TextBlock x:Name="MaxAbsences2" FontSize="11" Foreground="#707070"
-                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
-                                   Padding="0,0,0,1">/3</TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <Button Height="22" Width="24"
-                                Padding="0" Margin="0"
-                                Background="Transparent" BorderThickness="1"
-                                Style="{StaticResource ButtonRevealStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
-                                      Margin="0" FontSize="15" 
-                                      Foreground="#606060"/>
-                            </Button>
-                            <Button Height="22" Width="24"
-                                Padding="0" Margin="0,1,0,0"
-                                Background="Transparent" BorderThickness="1"
-                                Style="{StaticResource ButtonRevealStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
-                                      Margin="0" FontSize="15" 
-                                      Foreground="#606060"/>
-                            </Button>
-                        </StackPanel>
-
-                    </Grid>
-                </UWPT:DropShadowPanel>
-                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
-                                  OffsetX="0" OffsetY="2" Margin="0,10">
-                    <Grid Background="#fff" Height="64" Padding="12,0,12,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="22"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Style="{StaticResource BaseTextBlockStyle}"
-                               VerticalAlignment="Center" 
-                               TextLineBounds="Tight"
-                               >Lab. vježbe</TextBlock>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="CurrentAbsences1" FontSize="20" FontWeight="SemiBold"
-                                   TextLineBounds="Tight">0</TextBlock>
-                            <TextBlock x:Name="MaxAbsences1" FontSize="11" Foreground="#707070"
-                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
-                                   Padding="0,0,0,1">/3</TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <Button Height="22" Width="24"
-                                Padding="0" Margin="0"
-                                Background="Transparent" BorderThickness="1"
-                                Style="{StaticResource ButtonRevealStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
-                                      Margin="0" FontSize="15" 
-                                      Foreground="#606060"/>
-                            </Button>
-                            <Button Height="22" Width="24"
-                                Padding="0" Margin="0,1,0,0"
-                                Background="Transparent" BorderThickness="1"
-                                Style="{StaticResource ButtonRevealStyle}">
-                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
-                                      Margin="0" FontSize="15" 
-                                      Foreground="#606060"/>
-                            </Button>
-                        </StackPanel>
-
-                    </Grid>
-                </UWPT:DropShadowPanel>
-            </StackPanel>
         </StackPanel>
+        
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2" Width="230" HorizontalAlignment="Right">
+            
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Izostanci"/>
 
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="11,0,0,0" >Bodovi</TextBlock>
 
-            <Grid Grid.Row="1">
-            <ListView x:Name="CourseCategoryPoints" SelectionMode="Single" CanDragItems="True" CanDrag="True" CanReorderItems="True" IsItemClickEnabled="False" HorizontalAlignment="Left" ShowsScrollingPlaceholders="True">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UWPT:WrapPanel Background="Transparent" 
-                                        Orientation="Horizontal"
-                                        />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                    <ListView.ItemTemplate>
+            <TextBlock x:Name="DontHaveToComeLabel" Visibility="Collapsed" Margin="0,8,0,0" Text="Nema uvjeta za izostanke 🙂"/>
+            <ListView x:Name="AbsencesList" SelectionMode="None" Margin="-12,0" Padding="0">
+                <ListView.ItemTemplate >
                     <DataTemplate>
-                        <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black" OffsetX="0" OffsetY="2" Margin="0,10" Padding="0">
-                            <StackPanel Background="#fff" Width="250" Padding="12,14" Orientation="Vertical">
-                                <TextBlock Style="{StaticResource BaseTextBlockStyle}" TextLineBounds="Tight"
-                                       Margin="0,0,0,8" FontSize="16" Text="{Binding CategoryName}"/>
+                        <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
+                                  OffsetX="0" OffsetY="2" Margin="0,10">
+                            <Grid Background="#fff" Height="64" Padding="8,0,14,0" BorderThickness="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="32"/>
+                                    <ColumnDefinition Width="22"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Style="{StaticResource BaseTextBlockStyle}"
+                               VerticalAlignment="Center" Margin="0,5,0,0" 
+                               TextLineBounds="Tight" Text="{Binding AbsenceCategory}" MaxLines="2" Width="130" LineHeight="18" />
 
-                                <ListView SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding ChildItems}">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <RelativePanel Padding="0,4" Width="203">
-                                                <TextBlock RelativePanel.AlignVerticalCenterWithPanel="True"
-                                                       TextLineBounds="Tight" Text="{Binding Name}"/>
-                                                <StackPanel Orientation="Horizontal"
-                                                        RelativePanel.AlignRightWithPanel="True"
-                                                        RelativePanel.AlignVerticalCenterWithPanel="True">
-                                                    <TextBlock FontSize="20" FontWeight="SemiBold"
-                                                           TextLineBounds="Tight" Text="0"/>
-                                                    <TextBlock FontSize="11" Foreground="#707070"
-                                                           TextLineBounds="Tight" VerticalAlignment="Bottom"
-                                                           Padding="0,0,0,1" Text="/3"/>
-                                                </StackPanel>
-                                            </RelativePanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                    <ListViewItem>Abc</ListViewItem>
-                                </ListView>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock FontSize="20" FontWeight="SemiBold" Tag="currentAbsences"
+                                   TextLineBounds="Tight" Text="{Binding TimesAbsent, Mode=OneWay}"/>
+                                    <TextBlock FontSize="11" Foreground="#707070"
+                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                   Padding="0,0,0,1">/</TextBlock>
+                                    <TextBlock FontSize="11" Foreground="#707070"
+                                               TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                               Padding="0,0,0,1" Text="{Binding MaxTimesAbsent}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <Button x:Name="AbsencePlus" Height="22" Width="24" Click="AbsencePlus_OnClick"
+                                        Padding="0" Margin="0"
+                                        Background="Transparent" BorderThickness="1"
+                                        Style="{StaticResource ButtonRevealStyle}">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
+                                            Margin="0" FontSize="15" 
+                                            Foreground="#606060"/>
+                                    </Button>
+                                    <Button x:Name="AbsenceMinus" Height="22" Width="24" Click="AbsenceMinus_OnClick"
+                                        Padding="0" Margin="0,1,0,0"
+                                        Background="Transparent" BorderThickness="1"
+                                        Style="{StaticResource ButtonRevealStyle}">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
+                                            Margin="0" FontSize="15" 
+                                            Foreground="#606060"/>
+                                    </Button>
+                                </StackPanel>
 
-                            </StackPanel>
+                            </Grid>
                         </UWPT:DropShadowPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+        </StackPanel>
+        <UWPT:InAppNotification Grid.Column="1" Grid.Row="2" x:Name="AbsenceNotification" VerticalAlignment="Top" BorderThickness="0" ShowDismissButton="False" Padding="0" Margin="20,24,0,0" HorizontalAlignment="Center" 
+                                VerticalOffset="-1" HorizontalOffset="20" Background="#fff">
+            <Grid Background="#0dffb900" BorderBrush="#ff8c00" BorderThickness="0.5"  RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="🤨 Hej!" Padding="0,0,0,8"/>
+                <TextBlock Grid.Row="1" FontSize="14" >
+                    Ne možeš imati manje <LineBreak/>od 0 izostanaka
+                </TextBlock>
+            </Grid>
+        </UWPT:InAppNotification>
+
+        <UWPT:InAppNotification Grid.Column="1" Grid.Row="2" x:Name="BeforeTooManyAbsencesNotification" VerticalAlignment="Top" BorderThickness="0" ShowDismissButton="False" Padding="0" Margin="20,24,0,0" HorizontalAlignment="Center" 
+                                VerticalOffset="-1" HorizontalOffset="20" Background="#fff">
+            <Grid Background="#0dffb900" BorderBrush="#ff8c00" BorderThickness="0.5"  RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="🙅‍♂️ Dosta" Padding="0,0,0,8"/>
+                <TextBlock x:Name="BeforeTooManyNotifTxt" Grid.Row="1" FontSize="14" />
+            </Grid>
+        </UWPT:InAppNotification>
+
+        <UWPT:InAppNotification Grid.Column="1" Grid.Row="2" x:Name="TooManyAbsencesNotification" VerticalAlignment="Top" BorderThickness="0" ShowDismissButton="False" Padding="0" Margin="20,24,0,0" HorizontalAlignment="Center" 
+                                VerticalOffset="-1" HorizontalOffset="20" Background="#fff">
+            <Grid Background="#0de81123" BorderBrush="#e81123" BorderThickness="0.5"  RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="😮 Nije dobro" Padding="0,0,0,8"/>
+                <TextBlock x:Name="TooManyNotifTxt" Grid.Row="1" FontSize="14" />
+            </Grid>
+        </UWPT:InAppNotification>
+
+
+
+        <Grid Grid.Row="1" Grid.RowSpan="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,14" Text="Bodovi"/>
+
+            <Grid Grid.Row="1">
+                <GridView x:Name="CourseCategoryPoints" SelectionMode="None" HorizontalAlignment="Left" animations:ReorderGridAnimation.Duration="200" Padding="0" Margin="0" VerticalContentAlignment="Top" >
+
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="0" Margin="0" VerticalAlignment="Top">
+                                <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black" OffsetX="0" OffsetY="2" Margin="0" Padding="0" VerticalAlignment="Top">
+                                    <StackPanel Background="#fff" Width="280" Height="180" Padding="0,20,0,0" Orientation="Vertical" VerticalAlignment="Top">
+                                        <TextBlock Style="{StaticResource BaseTextBlockStyle}" TextLineBounds="Tight"
+                                       Margin="18,0,0,16" FontSize="16" Text="{Binding CategoryName}"/>
+
+                                        <ListView SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding ChildItems}" Padding="0" MaxHeight="125" ShowsScrollingPlaceholders="True">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="Height" Value="36" />
+                                                    <Setter Property="MinHeight" Value="32" />
+    
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Padding="7,0,0,0" Width="250" MinHeight="24" Margin="0,0">
+                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left"
+                                                       TextLineBounds="Tight" FontSize="14" Text="{Binding Name}"/>
+                                                        <StackPanel Orientation="Horizontal"
+                                                        VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                            <TextBlock FontSize="20" FontWeight="SemiBold"
+                                                           TextLineBounds="Tight" Text="{Binding CurrentPoints}"/>
+                                                            <TextBlock FontSize="11" Foreground="#707070"
+                                                           TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                                           Padding="0,0,0,1" Text="/"/>
+                                                            <TextBlock FontSize="11" Foreground="#707070"
+                                                               TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                                               Padding="0,0,2,1" Text="{Binding Points}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+
+                                    </StackPanel>
+                                </UWPT:DropShadowPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
             </Grid>
 
 
