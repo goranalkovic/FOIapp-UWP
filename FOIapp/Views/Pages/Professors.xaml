@@ -5,8 +5,193 @@
     xmlns:local="using:FOIapp.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:UWPT="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:Converters"
+    xmlns:UWPTA="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
 
-    <Grid Background="#f6f6f6" Padding="24">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../AppStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource PageBackground}" Padding="32,24" Margin="0,-60,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Stretch">
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
+                       Text="Profesori" TextLineBounds="Tight"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <ProgressRing Grid.Row="1" x:Name="LoadingRing" Width="44" Height="44" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <StackPanel Grid.Row="0" 
+                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Orientation="Horizontal">
+
+            <TextBlock x:Name="NoResultsText" Text="Nema rezultata"
+                       FontSize="13" TextLineBounds="Tight"
+                       Foreground="{StaticResource Medium}"
+                       VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0"/>
+            <AutoSuggestBox x:Name="ProfessorSearch"
+                            Style="{StaticResource NiceAutoSuggestBox}"
+                            PlaceholderText="Pretraži profesore"
+                            QueryIcon="Find"
+                            Width="280"
+                            TextChanged="SearchTextChanged"
+                            SuggestionChosen="SearchSuggestionChosen"
+                            QuerySubmitted="SearchQuerySubmitted"
+                            HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <UWPT:Carousel x:Name="TeachersCarousel" 
+                               InvertPositive="True" Orientation="Horizontal" SelectedIndex="1"
+                               ItemDepth="276" ItemMargin="-40"
+                               ItemRotationX="0" ItemRotationY="71" ItemRotationZ ="0"
+                               FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent"
+                               BorderBrush="Transparent"
+                               TransitionDuration="250">
+                    <UWPT:Carousel.EasingFunction>
+                        <QuadraticEase EasingMode="EaseOut"/>
+                    </UWPT:Carousel.EasingFunction>
+                    <UWPT:Carousel.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Padding="24" Height="535" Width="360" CornerRadius="1"
+                                    Background="{ThemeResource CardBackground}">
+
+                                <PersonPicture Height="96" Width="96" Margin="0,10,0,0" ProfilePicture="{Binding ImageUrl}"/>
+
+                                <TextBlock Text="{Binding Title}"
+                                           HorizontalAlignment="Center" Margin="0,14,0,0"
+                                           Foreground="{StaticResource Medium}"
+                                           FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                                        Margin="0,0,0,10" FontSize="24"
+                                        Text="{Binding FullNameNoTitle}" TextAlignment="Center" TextWrapping="WrapWholeWords"
+                                        HorizontalAlignment="Center" Foreground="{StaticResource AccentColor}"/>
+
+                                <TextBlock Text="E-mail adresa"
+                                           HorizontalAlignment="Center" Margin="0,14,0,0"
+                                           Foreground="{StaticResource AccentColor}"
+                                           FontSize="15" FontWeight="SemiBold"/>
+
+                                <TextBlock Text="{Binding Email}"
+                                           HorizontalAlignment="Center" Foreground="{StaticResource Light}"
+                                           FontSize="16" FontWeight="SemiBold"/>
+
+                                <Button Style="{StaticResource ButtonRevealStyle}" Background="Transparent" BorderThickness="1" 
+                                        Margin="0,4,0,0" HorizontalAlignment="Center" Click="ButtonBase_OnClick">
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE119;" FontSize="20" FontWeight="Normal"
+                                                  Foreground="{StaticResource Medium}"
+                                                  VerticalAlignment="Center"/>
+                                        <TextBlock FontSize="13" Text="Pošalji poruku" Foreground="{ThemeResource Medium}"                                            
+                                                   VerticalAlignment="Center" Margin="6,0,0,3" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <TextBlock Text="Lokacija"
+                                           HorizontalAlignment="Center" Margin="0,14,0,0"
+                                           Foreground="{StaticResource AccentColor}"
+                                           FontSize="15" FontWeight="SemiBold"/>
+
+                                <TextBlock Text="{Binding OfficeNumber}" 
+                                           HorizontalAlignment="Center"
+                                           Foreground="{StaticResource Light}"
+                                           FontSize="16" FontWeight="SemiBold"/>
+
+                                <TextBlock Text="{Binding OfficeLocation}"
+                                           HorizontalAlignment="Center" 
+                                           Foreground="{StaticResource Medium}"
+                                           FontSize="13.5" />
+
+                                <TextBlock Text="Konzultacije"
+                                           Visibility="{Binding Consultations, Converter={StaticResource ConsultationLabelVisibleConverter}}"
+                                           HorizontalAlignment="Center" Margin="0,14,0,0"
+                                           Foreground="{StaticResource AccentColor}"
+                                           FontSize="15" FontWeight="SemiBold"/>
+
+                                <ListView SelectionMode="None" 
+                                          ItemsSource="{Binding Consultations}" IsItemClickEnabled="False"
+                                          Background="{ThemeResource CardBackground}"
+                                          Width="280" MaxHeight="80" Margin="0,6,0,4" Padding="0,0,0,0">
+
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Height" Value="15" />
+                                            <Setter Property="MinHeight" Value="15" />
+                                            <Setter Property="Margin" Value="0,0,0,10"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <RelativePanel Width="240" HorizontalAlignment="Center" Background="{ThemeResource CardBackground}">
+                                                <StackPanel Orientation="Horizontal" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                                                    <TextBlock Text="{Binding Day, Converter={StaticResource ConsultationDayConverter}}"
+                                                               TextLineBounds="Tight" FontSize="14" 
+                                                               Foreground="{StaticResource MediumLight}"/>
+
+                                                    <TextBlock Text="&#xEDAD;" Visibility="{Binding Day, Converter={StaticResource SpecialConsultationConverter}}"
+                                                               FontSize="11" FontFamily="Segoe MDL2 Assets"
+                                                               TextLineBounds="Tight"
+                                                               VerticalAlignment="Center" Margin="4,0,0,0" Padding="00"
+                                                               Foreground="{StaticResource AccentColor}"
+                                                               ToolTipService.ToolTip="Uz prethodnu najavu"/>
+                                                </StackPanel>
+
+                                                <StackPanel Orientation="Horizontal" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                                                    <TextBlock Text="FOI 2" Visibility="{Binding IsFoi2, Converter={StaticResource ConsultationFoi2LabelConverter}}"
+                                                               TextLineBounds="Tight" FontSize="12" FontWeight="SemiBold"
+                                                               VerticalAlignment="Center" Margin="0,0,7,0"
+                                                               Foreground="{StaticResource MediumDark}"/>
+                                                    <TextBlock Text="{Binding Time, Converter={StaticResource ConsultationTimeConverter}}"
+                                                               FontWeight="SemiBold" FontSize="15" TextLineBounds="Tight"
+                                                               Foreground="{StaticResource Light}"/>
+                                                </StackPanel>
+
+                                            </RelativePanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </DataTemplate>
+                    </UWPT:Carousel.ItemTemplate>
+                </UWPT:Carousel>
+            </Border>
+            
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xECE7;" FontSize="20"
+                          Foreground="{ThemeResource AccentColor}">
+                    <FontIcon.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform Y="-1" X ="14"/>
+                        </TransformGroup>
+                    </FontIcon.RenderTransform>
+                </FontIcon>
+                <TextBlock Text="Koristite kotačić ili strelice lijevo/desno za pomicanje"
+                           Foreground="{ThemeResource Medium}"
+                           FontSize="12" Margin="2,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+
     </Grid>
 </Page>
+

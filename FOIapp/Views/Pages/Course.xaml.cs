@@ -1,19 +1,27 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using FOIapp.Classes;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 
 
 namespace FOIapp.Views.Pages
 {
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -25,14 +33,15 @@ namespace FOIapp.Views.Pages
         public ObservableCollection<AbsenceItem> TempAbsenceItems = new ObservableCollection<AbsenceItem>();
         public int CurrentCourseId;
         public int CurrentUserId;
-        public string tooManyAbsencesTxt;
-
+        public string TooManyAbsencesTxt;
+        public CourseItem TempCourseItem;
+        public bool IsPointInputValid;
 
         public Course()
         {
             InitializeComponent();
-            LoadInfoForCourse();
 
+            LoadInfoForCourse();
         }
 
         public void LoadInfoForCourse()
@@ -47,7 +56,8 @@ namespace FOIapp.Views.Pages
                 using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
                 {
                     connection.Open();
-                    var query = $"SELECT DISTINCT CourseItems.CategoryID, CourseCategories.CategoryName FROM CourseItems JOIN UserPoints ON CourseItems.CourseItemID = UserPoints.CourseItemID, Courses, CourseCategories WHERE Courses.CourseID = CourseItems.CourseID AND CourseCategories.CategoryID = CourseItems.CategoryID AND Courses.CourseID = {CurrentCourseId};";
+                    var query =
+                        $"SELECT DISTINCT CourseItems.CategoryID, CourseCategories.CategoryName FROM CourseItems JOIN UserPoints ON CourseItems.CourseItemID = UserPoints.CourseItemID, Courses, CourseCategories WHERE Courses.CourseID = CourseItems.CourseID AND CourseCategories.CategoryID = CourseItems.CategoryID AND Courses.CourseID = {CurrentCourseId};";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -64,7 +74,8 @@ namespace FOIapp.Views.Pages
                         }
                     }
 
-                    query = $"SELECT CourseItems.CourseItemID, CourseID, CategoryID, Name, CourseItems.Points, MinPoints, UserPoints.Points FROM UserPoints JOIN CourseItems ON UserPoints.CourseItemID = CourseItems.CourseItemID WHERE CourseID = {CurrentCourseId} AND UserPoints.UserID = {CurrentUserId};";
+                    query =
+                        $"SELECT CourseItems.CourseItemID, CourseID, CategoryID, Name, CourseItems.Points, MinPoints, UserPoints.Points FROM UserPoints JOIN CourseItems ON UserPoints.CourseItemID = CourseItems.CourseItemID WHERE CourseID = {CurrentCourseId} AND UserPoints.UserID = {CurrentUserId};";
 
                     TempAbsenceItems.Clear();
                     using (var command = new SqlCommand(query, connection))
@@ -83,11 +94,13 @@ namespace FOIapp.Views.Pages
                                     MinPoints = reader.GetDouble(5),
                                     CurrentPoints = reader.GetDouble(6)
                                 });
+
                             }
                         }
                     }
 
-                    query = $"SELECT UserAbsences.TimesAbsent, AbsenceCategories.CategoryID, AbsenceCategories.CategoryName, AbsenceItems.MaxTimesAbsent FROM UserAbsences JOIN AbsenceCategories ON UserAbsences.AbsenceCategoryID = AbsenceCategories.CategoryID, AbsenceItems WHERE UserAbsences.UserID = {CurrentUserId} AND UserAbsences.CourseID = {CurrentCourseId} AND AbsenceItems.CourseID = UserAbsences.CourseID AND AbsenceItems.AbsenceCategoryID = UserAbsences.AbsenceCategoryID;";
+                    query =
+                        $"SELECT UserAbsences.TimesAbsent, AbsenceCategories.CategoryID, AbsenceCategories.CategoryName, AbsenceItems.MaxTimesAbsent FROM UserAbsences JOIN AbsenceCategories ON UserAbsences.AbsenceCategoryID = AbsenceCategories.CategoryID, AbsenceItems WHERE UserAbsences.UserID = {CurrentUserId} AND UserAbsences.CourseID = {CurrentCourseId} AND AbsenceItems.CourseID = UserAbsences.CourseID AND AbsenceItems.AbsenceCategoryID = UserAbsences.AbsenceCategoryID;";
 
                     using (var command = new SqlCommand(query, connection))
                     {
@@ -136,9 +149,46 @@ namespace FOIapp.Views.Pages
                             }
                         }
                     }
+
+                    CalculateTotalPoints();
                 });
             }).Start();
+        }
 
+        private void CalculateTotalPoints()
+        {
+            var SumOfPoints = 0.0;
+
+            foreach (var c in CourseCategories)
+            {
+                foreach (var i in c.ChildItems)
+                {
+                    SumOfPoints += i.CurrentPoints;
+                }
+            }
+
+            TotalPoints.Text = $"{SumOfPoints}";
+
+            if (SumOfPoints < 50)
+            {
+                GradeText.Text = "Nedovoljan (1)";
+            }
+            else if (SumOfPoints >= 50 && SumOfPoints < 61)
+            {
+                GradeText.Text = "Dovoljan (2)";
+            }
+            else if (SumOfPoints >= 51 && SumOfPoints < 76)
+            {
+                GradeText.Text = "Dobar (3)";
+            }
+            else if (SumOfPoints >= 76 && SumOfPoints < 91)
+            {
+                GradeText.Text = "Vrlo dobar (4)";
+            }
+            else if (SumOfPoints >= 91)
+            {
+                GradeText.Text = "Izvrstan (5)";
+            }
         }
 
         private void AbsencePlus_OnClick(object sender, RoutedEventArgs e)
@@ -213,7 +263,7 @@ namespace FOIapp.Views.Pages
                         TooManyNotifTxt.Text += "s TZK";
                         break;
                 }
-                
+
                 var anim1 = AbsencesList.Blur(5);
                 var anim2 = AbsencesList.Blur();
 
@@ -244,7 +294,9 @@ namespace FOIapp.Views.Pages
                     $"UPDATE UserAbsences SET TimesAbsent += 1 WHERE UserID = {CurrentUserId} AND CourseID = {CurrentCourseId} AND AbsenceCategoryID = {dataObject.AbsenceCategoryID};";
 
                 var command = new SqlCommand(query, connection);
-                using (command.ExecuteReader()) { }
+                using (command.ExecuteReader())
+                {
+                }
 
                 connection.Close();
 
@@ -303,7 +355,9 @@ namespace FOIapp.Views.Pages
                     $"UPDATE UserAbsences SET TimesAbsent -= 1 WHERE UserID = {CurrentUserId} AND CourseID = {CurrentCourseId} AND AbsenceCategoryID = {dataObject.AbsenceCategoryID};";
 
                 var command = new SqlCommand(query, connection);
-                using (command.ExecuteReader()) { }
+                using (command.ExecuteReader())
+                {
+                }
 
                 connection.Close();
 
@@ -313,7 +367,210 @@ namespace FOIapp.Views.Pages
 
             TempAbsenceItems[index].TimesAbsent -= 1;
 
-            
+
+
+        }
+
+        private async void CourseItemClick(object sender, ItemClickEventArgs e)
+        {
+            TempCourseItem = e.ClickedItem as CourseItem;
+
+            // Init dialog data
+
+            // Init data
+            foreach (var c in CourseCategories)
+            {
+                if (c.CategoryID == TempCourseItem.CategoryID)
+                {
+                    NewPointParentCategoryName.Text = c.CategoryName.ToUpper();
+                }
+            }
+
+            NewPointCategoryName.Text = TempCourseItem.Name;
+
+            var bodoviTxt = "";
+            var minPoints = int.Parse(TempCourseItem.MinPoints.ToString()).ToString();
+
+            if (minPoints.EndsWith("1") && minPoints != "11")
+            {
+                bodoviTxt = "bod";
+            }
+            else if (minPoints.EndsWith("2") || minPoints.EndsWith("3") || minPoints.EndsWith("4")
+                     && minPoints != "12" && minPoints != "13" && minPoints != "14")
+            {
+                bodoviTxt = "boda";
+            }
+            else
+            {
+                bodoviTxt = "bodova";
+            }
+
+            MaxNewPoints.Text = $"/{TempCourseItem.Points}";
+            MinNewPoints.Text = $"{TempCourseItem.MinPoints} {bodoviTxt}";
+            if (TempCourseItem.MinPoints < 1)
+            {
+                ConditionStackPanel.Visibility = Visibility.Collapsed;
+            }
+
+            NewPoints.Text = "";
+
+            // Open dialog
+
+            await EditPointsDialog.ShowAsync();
+
+
+
+
+        }
+
+        private void EditPointsDialog_OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            // Normalize number
+            var clearedPoints = Regex.Replace(NewPoints.Text, "[^0-9.]", "");
+            clearedPoints = Regex.Replace(clearedPoints, @"(?:\.0+)|(?:\.$)", "");
+
+            if (clearedPoints == "")
+            {
+                EditPointsDialog.IsPrimaryButtonEnabled = false;
+                return;
+            }
+
+            var counter = 0;
+            foreach (var c in clearedPoints)
+            {
+                if (c.CompareTo('0') == 0)
+                {
+                    counter++;
+                    continue;
+                }
+
+                clearedPoints = clearedPoints.Substring(counter);
+                break;
+            }
+
+            if (clearedPoints.StartsWith(".")) clearedPoints = $"0{clearedPoints}";
+
+            // Update database
+
+            using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
+            {
+                connection.Open();
+
+                var query =
+                    $"UPDATE UserPoints SET Points = {clearedPoints} WHERE UserID = {CurrentUserId} AND CourseItemID = {TempCourseItem.CourseItemID};";
+
+                var command = new SqlCommand(query, connection);
+                using (command.ExecuteReader())
+                {
+                }
+
+                connection.Close();
+
+            }
+
+            // Update view
+
+            foreach (var c in CourseCategories)
+            {
+                foreach (var i in c.ChildItems)
+                {
+                    if (c.CategoryID == TempCourseItem.CategoryID && i.CourseItemID == TempCourseItem.CourseItemID)
+                    {
+                        i.CurrentPoints = double.Parse(clearedPoints);
+                    }
+                }
+            }
+
+            CalculateTotalPoints();
+
+        }
+
+        private void NewPoints_OnTextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            // Normalize number
+            var clearedPoints = Regex.Replace(NewPoints.Text, "[^0-9.]", "");
+            clearedPoints = Regex.Replace(clearedPoints, @"(?:\.0+)|(?:\.$)", "");
+
+            // Check conditions
+
+            if (clearedPoints == "")
+            {
+                EditPointsDialog.IsPrimaryButtonEnabled = false;
+            }
+            else
+            {
+                var counter = 0;
+                foreach (var c in clearedPoints)
+                {
+                    if (c.CompareTo('0') == 0)
+                    {
+                        counter++;
+                        continue;
+                    }
+
+                    clearedPoints = clearedPoints.Substring(counter);
+                    break;
+                }
+
+                if (clearedPoints.StartsWith(".")) clearedPoints = $"0{clearedPoints}";
+
+                if (double.Parse(clearedPoints) > TempCourseItem.Points)
+                {
+                    EditPointsDialog.IsPrimaryButtonEnabled = false;
+                    return;
+                }
+
+                EditPointsDialog.IsPrimaryButtonEnabled = true;
+            }
+        }
+
+        private async void NewPoints_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Normalize number
+            var clearedPoints = Regex.Replace(NewPoints.Text, "[^0-9.]", "");
+            clearedPoints = Regex.Replace(clearedPoints, @"(?:\.0+)|(?:\.$)", "");
+
+            // Prepare animations
+
+            var fadeIn = PointInputInfoText.Fade(1.0F, 200D);
+            var fadeOut = PointInputInfoText.Fade(0.0F, 100D);
+
+            await fadeOut.StartAsync();
+
+            // Check conditions
+
+            if (clearedPoints == "")
+            {
+                PointInputInfoText.Text = "❌ Moraš unijeti broj bodova";
+            }
+            else
+            {
+                var counter = 0;
+                foreach (var c in clearedPoints)
+                {
+                    if (c.CompareTo('0') == 0)
+                    {
+                        counter++;
+                        continue;
+                    }
+
+                    clearedPoints = clearedPoints.Substring(counter);
+                    break;
+                }
+
+                if (clearedPoints.StartsWith(".")) clearedPoints = $"0{clearedPoints}";
+
+                if (double.Parse(clearedPoints) > TempCourseItem.Points)
+                {
+                    PointInputInfoText.Text = "❌ Ne možeš imati toliko bodova";
+                    await fadeIn.StartAsync();
+                    return;
+                }
+
+                PointInputInfoText.Text = "✔";
+            }
+
+            await fadeIn.StartAsync();
 
         }
     }

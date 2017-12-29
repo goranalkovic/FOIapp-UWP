@@ -18,6 +18,7 @@ namespace FOIapp.Classes
         public string StudyName { get; set; }
 
         public string CourseColor { get; set; }
-        
+
+        public string ShortInfo => $"{StudyName}, {StudyYear}. godina";
     }
 }

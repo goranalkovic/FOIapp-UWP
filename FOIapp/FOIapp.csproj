@@ -92,6 +92,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Converters.cs" />
     <Compile Include="Classes\Course.cs" />
     <Compile Include="Classes\CourseCategory.cs" />
     <Compile Include="Classes\CourseItem.cs" />
@@ -99,14 +100,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Teacher.cs" />
+    <Compile Include="Classes\TeacherConsultations.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Classes\UserAbsences.cs" />
     <Compile Include="Classes\UserSettings.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="SharedFunctions.cs" />
-    <Compile Include="Views\Pages\AllCourses.xaml.cs">
-      <DependentUpon>AllCourses.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Pages\Course.xaml.cs">
       <DependentUpon>Course.xaml</DependentUpon>
     </Compile>
@@ -181,9 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\Pages\AllCourses.xaml">
+    <Page Include="Views\AppStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Views\Pages\Course.xaml">
       <SubType>Designer</SubType>

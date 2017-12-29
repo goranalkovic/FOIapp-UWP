@@ -1,0 +1,48 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FOIapp.Views"
+    xmlns:converters="using:Converters">
+
+    <!-- Converters -->
+    <converters:ConsultationDayConverter x:Key="ConsultationDayConverter" />
+    <converters:ConsultationTimeConverter x:Key="ConsultationTimeConverter"/>
+    <converters:SpecialConsultationConverter x:Key="SpecialConsultationConverter"/>
+    <converters:ConsultationFoi2LabelConverter x:Key="ConsultationFoi2LabelConverter"/>
+    <converters:ConsultationLabelVisibleConverter x:Key="ConsultationLabelVisibleConverter"/>
+    
+    <!-- Controls -->
+
+    <Style x:Key="NiceAutoSuggestBox" TargetType="AutoSuggestBox">
+        <Setter Property="TextBoxStyle" Value="{StaticResource NiceTextBox}" />
+    </Style>
+
+    <Style x:Key="NiceTextBox" BasedOn="{StaticResource AutoSuggestBoxTextBoxStyle}" TargetType="TextBox">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="8,6"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="Dark" Color="{ThemeResource SystemBaseLowColor}"/>
+    <SolidColorBrush x:Key="MediumDark" Color="{ThemeResource SystemBaseMediumLowColor}"/>
+    <SolidColorBrush x:Key="Medium" Color="{ThemeResource SystemBaseMediumColor}"/>
+    <SolidColorBrush x:Key="MediumLight" Color="{ThemeResource SystemBaseMediumHighColor}"/>
+    <SolidColorBrush x:Key="Light" Color="{ThemeResource SystemBaseHighColor}"/>
+    
+    <SolidColorBrush x:Key="AccentColor" Color="{ThemeResource SystemAccentColor}"/>
+
+    <SolidColorBrush x:Key="PageBackground" Color="{ThemeResource SystemChromeMediumLowColor}"/>
+
+    <!-- Custom brushes -->
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="CardBackground" Color="#ffffff"/>
+            <Color x:Key="ShadowColor">#1A000000</Color>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="CardBackground" Color="#181818"/>
+            <Color x:Key="ShadowColor">#4A000000</Color>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

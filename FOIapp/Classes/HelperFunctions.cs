@@ -8,21 +8,24 @@ using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace Helpers
 {
+
     static class FunctionsAndInterfaces
     {
         public static string connectionString = "Data Source=.;Initial Catalog=bp2-db;Integrated Security=True";
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
         {
-            Random random = new Random();
-            T[] copy = source.ToArray();
-
-            for (int i = copy.Length - 1; i >= 0; i--)
+            var random = new Random();
+            var copy = source.ToArray();
+            
+            for (var i = copy.Length - 1; i >= 0; i--)
             {
-                int index = random.Next(i + 1);
+                var index = random.Next(i + 1);
                 yield return copy[index];
                 copy[index] = copy[i];
             }
@@ -80,7 +83,7 @@ namespace Helpers
         public static Brush GenerateAcrylicBrush(Color acrylicColor, Color alternateColor, double acrylicOpacity = 0.7, bool inAppAcrylic = false)
         {
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
-                return new Windows.UI.Xaml.Media.AcrylicBrush
+                return new AcrylicBrush
                 {
                     BackgroundSource = inAppAcrylic ? AcrylicBackgroundSource.Backdrop : AcrylicBackgroundSource.HostBackdrop,
                     TintColor = acrylicColor,
@@ -99,23 +102,5 @@ namespace Helpers
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             titleBar.ButtonForegroundColor = buttonColor;
         }
-    }
-
-    public class Databases
-    {
-        public static SqlConnection GetSqlConnection(string serverName, string username, string password, string database)
-        {
-            var builder = new SqlConnectionStringBuilder()
-            {
-                DataSource = serverName,
-                UserID = username,
-                Password = password,
-                InitialCatalog = database
-            };
-
-            return new SqlConnection(builder.ConnectionString);
-        }
-
-    }
-
+    }   
 }

@@ -2,18 +2,24 @@
     x:Class="FOIapp.Views.Pages.Course"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:FOIapp.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:UWPT="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
-    xmlns:controls="using:WinRTXamlToolkit.Controls"
-    mc:Ignorable="d" Margin="0,-60,0,0 ">
+    mc:Ignorable="d" Margin="0,-40,0,0">
 
-    <Grid Background="#f6f6f6" Padding="24">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../AppStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource PageBackground}" Padding="32,24">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="260"></ColumnDefinition>
+            <ColumnDefinition Width="260"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -21,72 +27,89 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="ActiveCourseName" Style="{StaticResource SubheaderTextBlockStyle}" Grid.ColumnSpan="2">Mreže računala 1</TextBlock>
+        <TextBlock x:Name="ActiveCourseName" Style="{StaticResource SubheaderTextBlockStyle}" Grid.ColumnSpan="2" Text="CourseName"/>
         
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Width="230">
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Ukupno bodova"/>
             <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
                 <TextBlock
                     FontSize="44" CharacterSpacing="-10" FontWeight="SemiBold"
-                    VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline"
-                >51</TextBlock>
+                    VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline" x:Name="TotalPoints"/>
                 <TextBlock VerticalAlignment="Bottom" TextLineBounds="TrimToBaseline"
-                           FontSize="18" Foreground="#606060"
+                           FontSize="18" Foreground="{ThemeResource Medium}"
                            Padding="0,0,0,2" 
                 >/100</TextBlock>
             </StackPanel>
             <TextBlock Margin="2,8,0,0"
-                       FontSize="13" Foreground="{StaticResource SystemControlHighlightAltListAccentMediumBrush}">Dovoljan (2)</TextBlock>
+                       FontSize="13" Foreground="{ThemeResource MediumLight}" x:Name="GradeText"/>
         </StackPanel>
         
         <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="2" Width="230" HorizontalAlignment="Right">
             
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Izostanci"/>
 
-
-            <TextBlock x:Name="DontHaveToComeLabel" Visibility="Collapsed" Margin="0,8,0,0" Text="Nema uvjeta za izostanke 🙂"/>
+            <TextBlock x:Name="DontHaveToComeLabel"
+                       Visibility="Collapsed" Margin="0,8,0,0"
+                       Foreground="{ThemeResource MediumLight}"
+                       FontWeight="SemiBold"
+                       Text="Nema uvjeta za izostanke 🙂"/>
+            
             <ListView x:Name="AbsencesList" SelectionMode="None" Margin="-12,0" Padding="0">
                 <ListView.ItemTemplate >
                     <DataTemplate>
                         <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black"
                                   OffsetX="0" OffsetY="2" Margin="0,10">
-                            <Grid Background="#fff" Height="64" Padding="8,0,14,0" BorderThickness="0">
+                            <Grid Background="{ThemeResource CardBackground}" Height="64" Padding="8,0,14,0" BorderThickness="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="32"/>
                                     <ColumnDefinition Width="22"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Style="{StaticResource BaseTextBlockStyle}"
-                               VerticalAlignment="Center" Margin="0,5,0,0" 
-                               TextLineBounds="Tight" Text="{Binding AbsenceCategory}" MaxLines="2" Width="130" LineHeight="18" />
+                                           VerticalAlignment="Center" Margin="0,5,0,0" 
+                                           TextLineBounds="Tight" Text="{Binding AbsenceCategory}"
+                                           MaxLines="2" Width="130" LineHeight="18" />
 
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock FontSize="20" FontWeight="SemiBold" Tag="currentAbsences"
-                                   TextLineBounds="Tight" Text="{Binding TimesAbsent, Mode=OneWay}"/>
-                                    <TextBlock FontSize="11" Foreground="#707070"
-                                   TextLineBounds="Tight" VerticalAlignment="Bottom"
-                                   Padding="0,0,0,1">/</TextBlock>
-                                    <TextBlock FontSize="11" Foreground="#707070"
+                                    
+                                    <TextBlock FontSize="20" FontWeight="SemiBold" TextLineBounds="Tight"
+                                               Tag="currentAbsences"
+                                               Text="{Binding TimesAbsent, Mode=OneWay}"/>
+
+                                    <TextBlock FontSize="11" Foreground="{ThemeResource Medium}"
+                                               TextLineBounds="Tight" VerticalAlignment="Bottom"
+                                               Padding="0,0,0,1" Text="/"/>
+                                    
+                                    <TextBlock FontSize="11" Foreground="{ThemeResource Medium}"
+                                               FontWeight="SemiBold"
                                                TextLineBounds="Tight" VerticalAlignment="Bottom"
                                                Padding="0,0,0,1" Text="{Binding MaxTimesAbsent}"/>
+                                    
                                 </StackPanel>
+                                
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <Button x:Name="AbsencePlus" Height="22" Width="24" Click="AbsencePlus_OnClick"
-                                        Padding="0" Margin="0"
-                                        Background="Transparent" BorderThickness="1"
-                                        Style="{StaticResource ButtonRevealStyle}">
+                                    <Button Height="22" Width="24" Click="AbsencePlus_OnClick"
+                                            Padding="0" Margin="0"
+                                            Background="Transparent" BorderThickness="1"
+                                            Style="{StaticResource ButtonRevealStyle}">
+                                        
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96D;" 
-                                            Margin="0" FontSize="15" 
-                                            Foreground="#606060"/>
+                                                  Margin="0" FontSize="15" 
+                                                  Foreground="{ThemeResource Medium}"/>
+                                    
                                     </Button>
-                                    <Button x:Name="AbsenceMinus" Height="22" Width="24" Click="AbsenceMinus_OnClick"
-                                        Padding="0" Margin="0,1,0,0"
-                                        Background="Transparent" BorderThickness="1"
-                                        Style="{StaticResource ButtonRevealStyle}">
+                                    
+                                    <Button Height="22" Width="24" Click="AbsenceMinus_OnClick"
+                                            Padding="0" Margin="0,1,0,0"
+                                            Background="Transparent" BorderThickness="1"
+                                            Style="{StaticResource ButtonRevealStyle}">
+                                        
                                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE96E;"
-                                            Margin="0" FontSize="15" 
-                                            Foreground="#606060"/>
+                                                  Margin="0" FontSize="15" 
+                                                  Foreground="{ThemeResource Medium}"/>
+                                    
                                     </Button>
+                                    
                                 </StackPanel>
 
                             </Grid>
@@ -97,8 +120,8 @@
 
         </StackPanel>
         <UWPT:InAppNotification Grid.Column="1" Grid.Row="2" x:Name="AbsenceNotification" VerticalAlignment="Top" BorderThickness="0" ShowDismissButton="False" Padding="0" Margin="20,24,0,0" HorizontalAlignment="Center" 
-                                VerticalOffset="-1" HorizontalOffset="20" Background="#fff">
-            <Grid Background="#0dffb900" BorderBrush="#ff8c00" BorderThickness="0.5"  RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
+                                VerticalOffset="-1" HorizontalOffset="20" Background="Transparent">
+            <Grid Background="#f7e8c8" RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -111,8 +134,8 @@
         </UWPT:InAppNotification>
 
         <UWPT:InAppNotification Grid.Column="1" Grid.Row="2" x:Name="BeforeTooManyAbsencesNotification" VerticalAlignment="Top" BorderThickness="0" ShowDismissButton="False" Padding="0" Margin="20,24,0,0" HorizontalAlignment="Center" 
-                                VerticalOffset="-1" HorizontalOffset="20" Background="#fff">
-            <Grid Background="#0dffb900" BorderBrush="#ff8c00" BorderThickness="0.5"  RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
+                                VerticalOffset="-1" HorizontalOffset="20" Background="Transparent">
+            <Grid Background="#ffb900" RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -123,8 +146,8 @@
         </UWPT:InAppNotification>
 
         <UWPT:InAppNotification Grid.Column="1" Grid.Row="2" x:Name="TooManyAbsencesNotification" VerticalAlignment="Top" BorderThickness="0" ShowDismissButton="False" Padding="0" Margin="20,24,0,0" HorizontalAlignment="Center" 
-                                VerticalOffset="-1" HorizontalOffset="20" Background="#fff">
-            <Grid Background="#0de81123" BorderBrush="#e81123" BorderThickness="0.5"  RequestedTheme="Light"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
+                                VerticalOffset="-1" HorizontalOffset="20" Background="Transparent">
+            <Grid Background="#e81123" RequestedTheme="Dark"  Margin="0" Padding="24,20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -144,17 +167,22 @@
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,14" Text="Bodovi"/>
 
             <Grid Grid.Row="1">
-                <GridView x:Name="CourseCategoryPoints" SelectionMode="None" HorizontalAlignment="Left" animations:ReorderGridAnimation.Duration="200" Padding="0" Margin="0" VerticalContentAlignment="Top" >
-
+                <GridView x:Name="CourseCategoryPoints" SelectionMode="None" HorizontalAlignment="Left" animations:ReorderGridAnimation.Duration="200" Padding="0" Margin="-10,-10,0,0" VerticalContentAlignment="Top" >
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="10"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="0" Margin="0" VerticalAlignment="Top">
                                 <UWPT:DropShadowPanel BlurRadius="8" ShadowOpacity="0.1" Color="Black" OffsetX="0" OffsetY="2" Margin="0" Padding="0" VerticalAlignment="Top">
-                                    <StackPanel Background="#fff" Width="280" Height="180" Padding="0,20,0,0" Orientation="Vertical" VerticalAlignment="Top">
+                                    <StackPanel Background="{ThemeResource CardBackground}" Width="250" Height="180" Padding="0,20,0,0" Orientation="Vertical" VerticalAlignment="Top">
                                         <TextBlock Style="{StaticResource BaseTextBlockStyle}" TextLineBounds="Tight"
-                                       Margin="18,0,0,16" FontSize="16" Text="{Binding CategoryName}"/>
+                                       Margin="18,0,0,16" FontSize="17" Text="{Binding CategoryName}"/>
 
-                                        <ListView SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding ChildItems}" Padding="0" MaxHeight="125" ShowsScrollingPlaceholders="True">
+                                        <ListView SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding ChildItems}" Padding="0" MaxHeight="125" ShowsScrollingPlaceholders="True"
+                                                  ItemClick="CourseItemClick">
                                             <ListView.ItemContainerStyle>
                                                 <Style TargetType="ListViewItem">
                                                     <Setter Property="Height" Value="36" />
@@ -164,17 +192,17 @@
                                             </ListView.ItemContainerStyle>
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid Padding="7,0,0,0" Width="250" MinHeight="24" Margin="0,0">
+                                                    <Grid Padding="7,0,0,0" Width="220" MinHeight="24" Margin="0,0">
                                                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left"
-                                                       TextLineBounds="Tight" FontSize="14" Text="{Binding Name}"/>
+                                                       TextLineBounds="Tight" FontSize="14" Text="{Binding Name}" TextWrapping="Wrap" LineHeight="15" Padding="0,6,45,0" />
                                                         <StackPanel Orientation="Horizontal"
                                                         VerticalAlignment="Center" HorizontalAlignment="Right">
                                                             <TextBlock FontSize="20" FontWeight="SemiBold"
-                                                           TextLineBounds="Tight" Text="{Binding CurrentPoints}"/>
-                                                            <TextBlock FontSize="11" Foreground="#707070"
+                                                           TextLineBounds="Tight" Text="{Binding CurrentPoints, Mode=OneWay}"/>
+                                                            <TextBlock FontSize="11" Foreground="{ThemeResource Medium}"
                                                            TextLineBounds="Tight" VerticalAlignment="Bottom"
                                                            Padding="0,0,0,1" Text="/"/>
-                                                            <TextBlock FontSize="11" Foreground="#707070"
+                                                            <TextBlock FontSize="11" Foreground="{ThemeResource Medium}"
                                                                TextLineBounds="Tight" VerticalAlignment="Bottom"
                                                                Padding="0,0,2,1" Text="{Binding Points}"/>
                                                         </StackPanel>
@@ -193,5 +221,47 @@
 
 
         </Grid>
+        
+        <ContentDialog x:Name="EditPointsDialog"
+                       Background="{ThemeResource PageBackground}"
+                       PrimaryButtonText="U redu" CloseButtonText="Odustani"
+                       DefaultButton="Primary" PrimaryButtonClick="EditPointsDialog_OnPrimaryButtonClick"
+                       IsPrimaryButtonEnabled="False">
+            
+            <Grid RowSpacing="10"  Width="360">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Vertical" Grid.Row="1">
+                    <TextBlock x:Name="NewPointParentCategoryName" Text="KOLOKVIJI" FontSize="13" 
+                               FontWeight="SemiBold" CharacterSpacing="60" Foreground="{ThemeResource Medium}" Margin="0,-8,0,8"/>
+                    <TextBlock x:Name="NewPointCategoryName" Text="Kolokvij 1" LineHeight="24" TextLineBounds="Tight" TextWrapping="Wrap" 
+                               RelativePanel.AlignVerticalCenterWithPanel="True" FontSize="24" FontWeight="SemiBold" Foreground="{ThemeResource AccentColor}"/>
+
+                    <StackPanel x:Name="ConditionStackPanel" Margin="0,8,0,0">
+                        <TextBlock FontSize="15" Text="Uvjet" FontWeight="SemiBold" Foreground="{ThemeResource MediumLight}"/>
+                        <TextBlock x:Name="MinNewPoints" Text="10 bodova" FontSize="14" VerticalAlignment="Center" Foreground="{ThemeResource MediumLight }"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock FontSize="15" Text="Ostvareni bodovi" FontWeight="SemiBold" Foreground="{ThemeResource MediumLight}" Margin="0,0,0,6"/>
+                       
+                        <StackPanel Orientation="Horizontal" RelativePanel.AlignRightWithPanel="True">
+                            <TextBox x:Name="NewPoints" PlaceholderText="" Text="99" MinWidth="46" Padding="8,5" MaxLength="5"
+                                     BorderThickness="0" TextChanging="NewPoints_OnTextChanging" TextChanged="NewPoints_OnTextChanged"/>
+                            <TextBlock x:Name="MaxNewPoints" Text="/99" FontSize="12.5" Foreground="{ThemeResource MediumDark}"
+                                       VerticalAlignment="Center" Margin="4,0,0,5" CharacterSpacing="20" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="PointInputInfoText" Text=" " FontSize="14" Foreground="{ThemeResource Light}"
+                                       VerticalAlignment="Center" Margin="8,0,0,4" CharacterSpacing="-20" FontWeight="Normal"/>
+
+                        </StackPanel>
+                    </StackPanel>
+
+
+                </StackPanel>
+            </Grid>
+        </ContentDialog>
     </Grid>
 </Page>

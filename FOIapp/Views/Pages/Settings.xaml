@@ -5,44 +5,198 @@
     xmlns:local="using:FOIapp.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Margin="0,-60,0,0">
+    xmlns:UWPTC="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:Converters"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    mc:Ignorable="d" Margin="0,-40,0,0">
 
-    <Grid Background="#f6f6f6" Padding="24">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../AppStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Padding="32,24">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <TextBlock Text="Trenutni korisnik" Margin="0,0,0,12" Style="{StaticResource SubtitleTextBlockStyle}"/>
-            <StackPanel Orientation="Horizontal" Margin="8,0">
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{StaticResource SystemControlForegroundAccentBrush}"/>
-                <StackPanel Orientation="Vertical" >
-                    <TextBlock x:Name="CurrentUserName" />
-                    <TextBlock x:Name="CurrentUserEmail" FontSize="12" Foreground="Gray"/>
+        <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Dashboard"/>
+
+        <!-- Main part -->
+        
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Margin="0,0,20,0">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <TextBlock Text="Moji kolegiji" Margin="0,0,10,12" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <ProgressRing x:Name="LoadingProgress" IsActive="False"/>
+            </StackPanel>
+
+            <Button HorizontalAlignment="Right" Height="28" VerticalAlignment="Top" Grid.Row="0" Margin="0,2,9,0"
+                    Background="Transparent" BorderThickness="1" Style="{StaticResource ButtonRevealStyle}"
+                    Click="AddCourseButtonPressed" x:Name="AddCourseTopButton">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE109;" FontSize="13"
+                               VerticalAlignment="Center" Margin="0,0,5,0"
+                               Foreground="{ThemeResource AccentColor}"/>
+                    <TextBlock Text="Dodaj kolegij"
+                               FontSize="14" TextLineBounds="Tight"
+                               VerticalAlignment="Center" Margin="0,0,0,1"/>
                 </StackPanel>
+            </Button>
+
+            <GridView x:Name="CourseListView" SelectionMode="None" IsItemClickEnabled="False" Margin="-16,0,0,0"
+                      animations:ReorderGridAnimation.Duration="200" Grid.Row="1">
+
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Margin" Value="10"/>
+                    </Style>
+                </GridView.ItemContainerStyle>
+
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <UWPTC:DropShadowPanel BlurRadius="8" ShadowOpacity="1" Color="{ThemeResource ShadowColor}"
+                                               OffsetX="0" OffsetY="2" >
+                            <Grid Height="140" Width="220" Background="{ThemeResource CardBackground}" Padding="16">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding ShortName}"
+                                           FontWeight="SemiBold" TextLineBounds="Tight"
+                                           Foreground="{ThemeResource AccentColor}"
+                                           HorizontalAlignment="Left" VerticalAlignment="Top"
+                                           Opacity="0.8"/>
+                                <TextBlock Text="{Binding Name}"
+                                           Margin="1,12,0,0"
+                                           HorizontalAlignment="Left" VerticalAlignment="Top"
+                                           TextWrapping="Wrap" TextLineBounds="Tight" LineHeight="19"
+                                           Style="{StaticResource SubtitleTextBlockStyle}"
+                                           Grid.Row="1"/>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1"
+                                            HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                    <Button Style="{StaticResource ButtonRevealStyle}"
+                                            Foreground="{ThemeResource Medium}"
+                                            Background="Transparent" BorderThickness="1"
+                                            Height="32" Width="32" Click="DeleteCourse">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE107;" FontSize="16" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </UWPTC:DropShadowPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+            <Grid Grid.Row="1" x:Name="NoCoursesHero" Visibility="Collapsed">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="😢" FontSize="160" Margin="0,0,0,10"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Nema kolegija"
+                               FontSize="24"
+                               HorizontalAlignment="Center"/>
+                    <Button HorizontalAlignment="Center" Margin="0,20" Padding="20,10"
+                            Background="Transparent" BorderThickness="1" Style="{StaticResource ButtonRevealStyle}"
+                            Click="AddCourseButtonPressed">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE109;" FontSize="15"
+                                       VerticalAlignment="Center" Margin="0,0,5,0"
+                                       Foreground="{ThemeResource AccentColor}"/>
+                            <TextBlock Text="Dodaj kolegij"
+                                       FontSize="16" TextLineBounds="Tight" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" Margin="0,0,0,1"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                
+            </Grid>
+        </Grid>
+        
+        <!-- Right pane -->
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Trenutni korisnik" Margin="0,0,0,12" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 <ProgressRing x:Name="UserLoadingRing" IsActive="False" />
             </StackPanel>
-            <HyperlinkButton Background="Transparent" Margin="36,0" 
-                             VerticalAlignment="Center" FontSize="14" Click="ButtonBase_OnClick"
-                             Foreground="{StaticResource SystemControlHighlightAltListAccentMediumBrush}">
-                            <TextBlock>Promijeni</TextBlock>
-             </HyperlinkButton>
+
+
+            <Button Padding="2" VerticalAlignment="Top" Margin="2,4,0,0"
+                    Background="Transparent" BorderThickness="1" Style="{StaticResource ButtonRevealStyle}"
+                    ToolTipService.ToolTip="Postavke">
+                <StackPanel Orientation="Horizontal" Margin="8,0">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE13D;" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{StaticResource SystemControlForegroundAccentBrush}"/>
+                    <StackPanel Orientation="Vertical" Width="100">
+                        <TextBlock x:Name="CurrentUserName" />
+                        <TextBlock x:Name="CurrentUserEmail" FontSize="12" Foreground="Gray"/>
+                    </StackPanel>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" TextLineBounds="Tight"
+                                   Text="&#xE011;" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                              
+                </StackPanel>
+
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="SwitchActiveUser" Text="Upravljanje korisnicima" Click="ShowUserPicker">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE125;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutSeparator x:Name="SwitchActiveUserSeparator"/>
+
+                        <MenuFlyoutItem Text="Dodaj novog korisnika" Click="ShowUserAddDialog">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE1E2;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
             
+           
+
+
+
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                <TextBlock Text="Korisničke postavke" Margin="0,0,10,0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="Postavke" Margin="0,0,10,0" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 <ProgressRing x:Name="SettingsLoadingRing" IsActive="False" />
             </StackPanel>
 
             <ToggleSwitch x:Name="ShowNotificationsToggle" OnContent="Da" OffContent="Ne" Margin="12" 
-                          Toggled="ShowNotificationsToggle_Toggled" >Prikazuj obavijesti</ToggleSwitch>
+                          Toggled="ShowNotificationsToggle_Toggled" Header="Prikaži obavijesti"
+                          Visibility="Collapsed"/>
+
+            <ToggleSwitch x:Name="ThemeToggle" OnContent="Tamno" OffContent="Svijetlo" 
+                          Margin="12" Header="Izgled sučelja" />
+
         </StackPanel>
 
-      <ContentDialog Grid.Column="0" x:Name="UserPicker" Visibility="Visible" 
+        <!-- User switcher -->
+
+        <ContentDialog Grid.Column="1" Grid.Row="1" x:Name="UserPicker" Visibility="Visible" 
+                     Background="{ThemeResource PageBackground}"
                      PrimaryButtonText="Odaberi" IsPrimaryButtonEnabled="False" 
-                     Title="Odaberite korisnika" DefaultButton="Primary" CloseButtonText="Odustani"
-                     PrimaryButtonClick="UserPicker_OnPrimaryButtonClick">
+                     SecondaryButtonText="Obriši" IsSecondaryButtonEnabled="False"
+                     Title="🤹‍♀️ Promijeni korisnika" DefaultButton="Primary" CloseButtonText="Odustani"
+                     PrimaryButtonClick="UserPicker_OnPrimaryButtonClick" SecondaryButtonClick="RemoveUserFromDb">
             <StackPanel>
                 <ListView x:Name="UserSelectList" Margin="0,8" Height="244" HorizontalAlignment="Stretch" SelectionChanged="UserSelectList_OnSelectionChanged">
                     <ListView.ItemTemplate >
@@ -60,5 +214,135 @@
             </StackPanel>
         </ContentDialog>
 
+        <!-- Add course -->
+
+        <ContentDialog Grid.Column="1" Grid.Row="1" x:Name="AddCourseDialog" Visibility="Visible" 
+                       Background="{ThemeResource PageBackground}"
+                       PrimaryButtonText="Odaberi" IsPrimaryButtonEnabled="False"
+                       Title="📔 Dodaj kolegij" DefaultButton="Primary" CloseButtonText="Odustani"
+                       PrimaryButtonClick="AddUserCourseToDb" >
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Orientation="Vertical">
+
+                    <TextBlock x:Name="NoResultsText" Text="Nema rezultata"
+                               FontSize="13" TextLineBounds="Tight"
+                               Foreground="{StaticResource Medium}"
+                               VerticalAlignment="Center" Margin="0,0,10,0" Opacity="0"/>
+                    <AutoSuggestBox x:Name="CourseSearch"
+                                    Style="{StaticResource NiceAutoSuggestBox}"
+                                    PlaceholderText="Pretraži kolegije"
+                                    QueryIcon="Find" Width="280"
+                                    TextChanged="SearchCourseList"
+                                    HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <ListView x:Name="AllCoursesList" Margin="0,8" Height="244" Width="320" HorizontalAlignment="Stretch" 
+                          SelectionChanged="AllCoursesList_OnSelectionChanged">
+                    <ListView.ItemTemplate >
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE82D;" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{ThemeResource AccentColor}"/>
+                                <StackPanel Orientation="Vertical" >
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock FontSize="12" Foreground="Gray" Text="{Binding ShortInfo}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </ContentDialog>
+
+        <!-- Add user -->
+
+        <ContentDialog Grid.Column="1" Grid.Row="1" x:Name="AddUserDialog" Visibility="Visible" 
+                       Background="{ThemeResource PageBackground}"
+                       PrimaryButtonText="Dodaj" SecondaryButtonText="Odustani"
+                       IsPrimaryButtonEnabled="False"
+                       Title="📔 Dodaj korisnika" DefaultButton="Primary" 
+                       PrimaryButtonClick="AddUserToDb">
+            <StackPanel>
+                <TextBox x:Name="NewUserName"
+                         Width="240" Margin="0,10,0,20"
+                         Header="Ime"
+                         BorderThickness="0"
+                         TextChanging="ValidateNewUser"/>
+                <TextBox x:Name="NewUserSurname"
+                         Width="240" Margin="0,0,0,20"
+                         Header="Prezime"
+                         BorderThickness="0"
+                         TextChanging="ValidateNewUser"/>
+                <TextBox x:Name="NewUserEmail"
+                         Width="240" Margin="0,0,0,20"
+                         Header="Adresa e-pošte"
+                         BorderThickness="0"
+                         TextChanging="ValidateNewUser"/>
+                <TextBlock x:Name="NewUserInfoText" Text="" FontSize="14" Foreground="{ThemeResource Light}"
+                           HorizontalAlignment="Center" Margin="0,8,0,4" CharacterSpacing="-20" FontWeight="Normal"/>
+                
+            </StackPanel>
+        </ContentDialog>
+
+        <!-- No user hero -->
+        
+        <Grid x:Name="NoUserHero"
+              Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" 
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+              Margin="0" Padding="0"
+              Visibility="Collapsed"
+              Background="{ThemeResource PageBackground}">
+
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock Text="🙋‍♂️" FontSize="160" Margin="0,0,0,4"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Bok!"
+                           FontSize="28"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Dobrodošao/la u FOIapp!"
+                           FontWeight="SemiLight" FontSize="18"
+                           HorizontalAlignment="Center"/>
+                
+                <TextBlock x:Name="NewUserHeroIntro"
+                           Text="Prije nego počnemo, trebat ćemo par podataka"
+                           FontSize="16" FontWeight="Normal"
+                           HorizontalAlignment="Center"
+                           Margin="0,30,0,0"
+                           Foreground="{ThemeResource MediumLight}"/>
+
+                <Button x:Name="NewUserHeroAddDialog"
+                        HorizontalAlignment="Center" Margin="0,20" Padding="20,10"
+                        BorderThickness="1" Style="{StaticResource ButtonRevealStyle}"
+                        Background="Transparent"
+                        Click="ShowUserAddDialog">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE104;" FontSize="19"
+                                   VerticalAlignment="Center" Margin="0,0,7,0"
+                                   Foreground="{ThemeResource AccentColor}"/>
+                        <TextBlock Text="Unesi podatke"
+                                   FontSize="16" TextLineBounds="Tight" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" Margin="0,0,0,1"/>
+                    </StackPanel>
+                </Button>
+
+                <ProgressRing x:Name="NewUserProgressRing" IsActive="False"/>
+                
+                <Button HorizontalAlignment="Center" Margin="0,20" Padding="20,10"
+                        x:Name="NewUserHeroContinueButton" Background="Transparent"
+                        IsEnabled="False"
+                        BorderThickness="1" Style="{StaticResource ButtonRevealStyle}" Opacity="0"
+                        Click="NewUserHeroContinueButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE102;" FontSize="15"
+                                   VerticalAlignment="Center" Margin="0,0,7,0"/>
+                        <TextBlock Text="Počni"
+                                   FontSize="16" TextLineBounds="Tight" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" Margin="0,0,0,1"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+        
     </Grid>
 </Page>

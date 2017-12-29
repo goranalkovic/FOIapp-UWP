@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI;
+using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using FOIapp.Classes;
 using FOIapp.Views.Pages;
-using Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Course = FOIapp.Classes.Course;
 
@@ -22,45 +23,51 @@ namespace FOIapp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        ObservableCollection<NavigationViewItem> mainMenuItems = new ObservableCollection<NavigationViewItem>();
-        List<Course> currentUserCourses = new List<Course>();
-        private Course currentCourse;
-        string currentUserName = "";
-        private LocalObjectStorageHelper localStorage = new LocalObjectStorageHelper();
+        public ObservableCollection<NavigationViewItem> MainMenuItems = new ObservableCollection<NavigationViewItem>();
+        public List<Course> CurrentUserCourses = new List<Course>();
+        public Course CurrentCourse;
+        public string currentUserName = "";
+        public LocalObjectStorageHelper LocalStorage = new LocalObjectStorageHelper();
 
         public MainPage()
         {
             InitializeComponent();
+            
+            var items = MainNavView.MenuItems.ToList();
 
-            // Extend into title bar
-            FluentDesign.SetTransparentTitleBar(Colors.Black);
+            foreach (var item in items)
+            {
+                MainMenuItems.Add(item as NavigationViewItem);
+            }
 
             // Bind and populate menu
-            MainNavView.MenuItemsSource = mainMenuItems;
-            AddDefaultMenuItems();
-            MainNavView.SelectedItem = mainMenuItems[0];
-            mainMenuItems[0].IsSelected = true;
-            ContentFrame.Navigate(typeof(AllCourses));
+            MainNavView.MenuItemsSource = MainMenuItems;
+
+            MainNavView.SelectedItem = MainMenuItems[1];
+            MainMenuItems[1].IsSelected = true;
+            ContentFrame.Navigate(typeof(Settings));
 
             // Load user
 
-            var localStorage = new LocalObjectStorageHelper();
-            LoadUser(localStorage.Read<int>("currentUserId"));
+            LoadUser(LocalStorage.Read<int>("currentUserId"));
+
+            // Set window sizing options
+
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(600, 675));
+            ApplicationView.PreferredLaunchViewSize = new Size(1040, 700);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
         }
-
-
 
         public void LoadUser(int userId)
         {
             UserLoadingRing.IsActive = true;
+            MainNavView.IsEnabled = false;
 
             new Task(async () =>
             {
                 var currentUser = new User();
-                
 
-                //using (var connection = Helpers.Databases.GetSqlConnection("galkovic-bp2.database.windows.net", "Goc", "sony-yield-pencil1", "bp2-projekt"))
                 using (var connection = new SqlConnection(Helpers.FunctionsAndInterfaces.connectionString))
                 {
                     connection.Open();
@@ -70,11 +77,12 @@ namespace FOIapp
                     {
                         using (var reader = command.ExecuteReader())
                         {
-                            reader.Read();
-
-                            currentUser.Name = reader.GetString(0);
-                            currentUser.Surname = reader.GetString(1);
-                            currentUser.Email = reader.GetString(2);
+                            if (reader.Read())
+                            {
+                                currentUser.Name = reader.GetString(0);
+                                currentUser.Surname = reader.GetString(1);
+                                currentUser.Email = reader.GetString(2);
+                            }
                         }
                     }
 
@@ -86,21 +94,16 @@ namespace FOIapp
                         {
                             while (reader.Read())
                             {
-                                currentUserCourses.Add(new Course
+                                CurrentUserCourses.Add(new Course
                                 {
-                                    CourseID =  reader.GetInt32(0),
+                                    CourseID = reader.GetInt32(0),
                                     Name = reader.GetString(1),
                                     ShortName = reader.GetString(2),
-                                    StudyYear =  reader.GetInt32(3),
+                                    StudyYear = reader.GetInt32(3),
                                     StudyName = reader.GetString(4),
                                     CourseColor = reader.GetString(5)
-
                                 });
-
-                                
                             }
-
-                         
                         }
                     }
 
@@ -111,95 +114,86 @@ namespace FOIapp
                 {
                     UserLoadingRing.IsActive = false;
 
-                    CurrentUserEmail.Text = currentUser.Email.Length > 0 ? currentUser.Email : "Greška";
                     CurrentUserName.Text = currentUser.FullName.Length > 0 ? currentUser.FullName : "Baza nedostupna";
 
-                    if (currentUserCourses.Count > 0)
+                    if (CurrentUserCourses.Count > 0)
                     {
-                        foreach (var course in currentUserCourses)
+                        foreach (var course in CurrentUserCourses.OrderBy(n => n.Name))
                         {
                             AddNewMenuItem(course.Name, (Symbol)0xE82D, $"course{course.CourseID}");
-                            
+
                         }
                     }
 
                     NavMenuUserIconTooltip.Content = currentUser.FullName;
 
+                    MainNavView.IsEnabled = true;
 
                 });
             }).Start();
         }
 
-        private void AddDefaultMenuItems()
-        {
-            AddNewMenuItem("Moji kolegiji", (Symbol)0xF0E2, "allCourses");
-            AddNewMenuItem("Popis profesora", (Symbol)0xE179, "professors", true);
-            //AddNewMenuItem("Kolegij", (Symbol)0xE82D, "course01");
-
-        }
 
         private void AddNewMenuItem(string Title, Symbol Icon, string Tag, bool BottomMargin = false)
         {
+            string name;
+
+            if (Title.Length > 30)
+            {
+                name = Title.Substring(0, 30);
+                name += "...";
+            }
+            else
+            {
+                name = Title;
+            }
+
             var menuItem = new NavigationViewItem
             {
-                Content = Title,
+                Content = name,
                 Icon = new SymbolIcon(Icon),
                 Tag = Tag
             };
+
+            var toolTip = new ToolTip
+            {
+                Content = Title
+            };
+            ToolTipService.SetToolTip(menuItem, toolTip);
 
             if (BottomMargin)
             {
                 menuItem.Margin = new Thickness(0, 0, 0, 8);
             }
 
-            mainMenuItems.Add(menuItem);
+            MainMenuItems.Add(menuItem);
         }
 
         private void NavSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            if (args.IsSettingsSelected)
+
+            var item = args.SelectedItem as NavigationViewItem;
+
+            switch (item.Tag)
             {
-                ContentFrame.Navigate(typeof(Settings));
-                //MainNavView.Header = "Postavke";
-            }
-            else
-            {
-                var item = args.SelectedItem as NavigationViewItem;
+                case "UserTile":
+                    ContentFrame.Navigate(typeof(Settings));
+                    break;
+                case "ProfessorList":
+                    ContentFrame.Navigate(typeof(Professors));
+                    break;
+                default:
+                    foreach (var course in CurrentUserCourses)
+                    {
+                        if ($"course{course.CourseID}" != item.Tag.ToString()) continue;
+                        LocalStorage.Save("currentCourseName", course.Name);
+                        LocalStorage.Save("currentCourseID", course.CourseID);
+                    }
 
-                switch (item.Tag)
-                {
-                    case "allCourses":
-                        ContentFrame.Navigate(typeof(AllCourses));
-                        //MainNavView.Header = "Moji kolegiji";
-                        break;
-                    case "UserTile":
-                        ContentFrame.Navigate(typeof(Settings));
-                        break;
-                    case "professors":
-                        ContentFrame.Navigate(typeof(Professors));
-                        //MainNavView.Header = "Popis profesora";
-                        break;
-                    default:
-                        foreach (var course in currentUserCourses)
-                        {
-                            if ($"course{course.CourseID}" == item.Tag.ToString())
-                            {
-                                //MainNavView.Header = course.Name;
+                    ContentFrame.Navigate(typeof(Views.Pages.Course));
 
+                    break;
 
-                                localStorage.Save("currentCourseName", course.Name);
-                                localStorage.Save("currentCourseID", course.CourseID);
-
-                            }
-                        }
-
-                        //while (localStorage.Read<string>("currentCourseName") == null) { }
-                        ContentFrame.Navigate(typeof(Views.Pages.Course));
-
-
-                        //MainNavView.Header = $"{item.Tag}";
-                        break;
-                }
             }
         }
 
